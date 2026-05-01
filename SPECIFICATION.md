@@ -15,9 +15,8 @@ The system runs locally or in a container. It connects to an LLM (Ollama for fre
 
 1. **Research, Not Trading**: AEON investigates and recommends. It never places orders, holds positions, or moves money. The operator makes all execution decisions.
 2. **LLM-First Reasoning**: Every strategic decision — what to research, which tool to call next, whether a finding is significant, how to frame a recommendation — flows through the LLM. There is no hard-coded strategy logic.
-3. **One Tool at a Time**: The agent makes a single tool call per LLM turn. After each result, it logs findings to memory, re-evaluates, and decides the next action. This prevents wasted API calls and ensures every decision is reflected in the consciousness stream.
-4. **Cost-Aware Operation**: Every LLM token and API call is tracked against a configurable daily budget. When the budget is exhausted, the agent sleeps until the next day. Sleep intervals are also market-aware — shorter during trading hours when findings are active, longer when markets are closed.
-5. **Persistent Memory**: All research sessions, findings, theses, recommendations, and steering inputs are stored in a SQLite database that survives restarts. The agent picks up where it left off.
+3. **Cost-Aware Operation**: Every LLM token and API call is tracked against a configurable daily budget. When the budget is exhausted, the agent sleeps until the next day. Sleep intervals are also market-aware — shorter during trading hours when findings are active, longer when markets are closed.
+4. **Persistent Memory**: All research sessions, findings, theses, recommendations, and steering inputs are stored in a SQLite database that survives restarts. The agent picks up where it left off.
 
 ---
 
