@@ -229,7 +229,7 @@ Tests use `pytest-asyncio` with `asyncio_mode = "auto"`. All external services (
 
 - Python 3.11+
 - macOS or Linux
-- Ollama (local) or AWS Bedrock credentials
+- Ollama or AWS Bedrock credentials
 - Optional: Finnhub, Alpha Vantage, SerpAPI, or Brave API keys for extended data coverage
 
 ---
