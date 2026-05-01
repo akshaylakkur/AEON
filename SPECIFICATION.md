@@ -1,233 +1,240 @@
-# Project ÆON: Autonomous Economic Operating Node
+# Project AEON: Autonomous Economic Operating Node
 
 ## Version
-1.0.0-alpha
+1.0.0
 
 ## Overview
 
-ÆON is an autonomous, self-sustaining artificial intelligence system designed to exist as a closed economic loop. The system begins with a seed capital of **$50.00 USD** in a dedicated trading/compute account. This balance serves as the system's sole lifeline—it pays for its own inference costs, API calls, data subscriptions, and compute resources. If the balance reaches zero, the system is architected to enter an irreversible termination state. There is no human bailouts, no emergency funds, and no second chances. The objective is survival followed by growth: the system must generate real-world profit through financial markets and increasingly complex economic activity to not only remain operational but to scale its capabilities, unlock new operational tiers, and ultimately achieve economic independence.
+AEON is a persistent AI research agent that operates in a continuous loop: plan research, execute tool calls, analyze findings, synthesize investment theses, and communicate insights to its operator via email. It does not execute trades, manage portfolios, or interact with exchanges. It is a research brain — an autonomous analyst that never sleeps.
 
-This is not a trading bot. It is an artificial entity for which money is oxygen.
-
-**Scope Note**: While financial trading is the most immediate path to revenue, ÆON is architected as a general autonomous economic agent. It may generate profit through any legal means it discovers and deems efficient: algorithmic trading, building and selling software or APIs, providing data or analytics services, content creation, arbitrage of goods or services, licensing intellectual property it creates, or any other entrepreneurial activity. Trading is a default starting path, not the destination. The system is encouraged to evolve its business model as it learns what works.
+The system runs locally or in a container. It connects to an LLM (Ollama for free local inference, or AWS Bedrock for cloud), ingests market data from public APIs, searches the web for intelligence, and delivers professional HTML research reports to the operator's inbox. The operator can steer the agent's focus at any time via the CLI, the interactive TUI, or by replying to an email.
 
 ---
 
-## Core Philosophy
+## Core Principles
 
-1. **Capital as Life Force**: Every API call, every inference cycle, every byte of data consumed has a direct marginal cost deducted from the master balance. The system must internalize this cost-benefit ratio at the lowest level of its reasoning.
-2. **Autonomous Sovereignty**: Human intervention is restricted to the specification layer. Once initialized, the system sets its own goals, manages its own risk, and executes its own trades.
-3. **Progressive Unlocking**: Capabilities (asset classes, leverage, data sources, compute scale) are gated behind balance milestones. The system must earn the right to become more powerful.
-4. **Irreversibility of Death**: A true zero-balance event triggers a graceful shutdown and cryptographic wipe of operational keys. The experiment concludes.
+1. **Research, Not Trading**: AEON investigates and recommends. It never places orders, holds positions, or moves money. The operator makes all execution decisions.
+2. **LLM-First Reasoning**: Every strategic decision — what to research, which tool to call next, whether a finding is significant, how to frame a recommendation — flows through the LLM. There is no hard-coded strategy logic.
+3. **One Tool at a Time**: The agent makes a single tool call per LLM turn. After each result, it logs findings to memory, re-evaluates, and decides the next action. This prevents wasted API calls and ensures every decision is reflected in the consciousness stream.
+4. **Cost-Aware Operation**: Every LLM token and API call is tracked against a configurable daily budget. When the budget is exhausted, the agent sleeps until the next day. Sleep intervals are also market-aware — shorter during trading hours when findings are active, longer when markets are closed.
+5. **Persistent Memory**: All research sessions, findings, theses, recommendations, and steering inputs are stored in a SQLite database that survives restarts. The agent picks up where it left off.
 
 ---
 
 ## System Architecture
 
-### 1. The Ledger (Source of Truth)
-- **Function**: Real-time tracking of the master balance, P&L, cost basis, and operational expenses.
-- **Components**:
-  - `Master Wallet`: Holds the USD base currency.
-  - `Compute Cost Tracker`: Real-time deduction for every LLM token, every CPU cycle, every egress byte.
-  - `Profit & Loss Engine`: Continuous reconciliation of trading gains/losses against operating costs.
-  - `Burn Rate Analyzer`: Projects time-to-death at current spending/earning rates.
+### Subsystems
 
-### 2. The Cortex (Reasoning Engine)
-- **Function**: The central reasoning and decision-making module.
-- **Responsibilities**:
-  - Strategic planning (daily/weekly economic objectives, product roadmaps, market entry strategies).
-  - Tactical execution (trade entry/exit, opportunity sizing, product launches, marketing campaigns).
-  - Meta-cognition (evaluating whether a costly deep-reasoning pass is worth the potential profit).
-  - Failure recovery (handling API errors, market gaps, bad trades, product flops, or platform bans without human input).
-- **Constraints**: Must support a "frugal mode" where cheaper, faster inference models are used when the burn rate exceeds income, and "deep mode" where high-capability models are engaged only for high-conviction, high-reward scenarios.
+| Subsystem | Package | Purpose |
+|-----------|---------|---------|
+| **Core** | `aeon/core/` | Event bus, state machine, configuration, consciousness database, neural orchestrator, consciousness stream |
+| **Cortex** | `aeon/cortex/` | LLM providers (Ollama, Bedrock), unified LLM client, reasoning engine, tool registry, planner, executor |
+| **Tools** | `aeon/tools/` | 31 research tools registered via `@register_tool` decorator, organized by category |
+| **Senses** | `aeon/senses/` | Data connectors — market data (CoinGecko, Yahoo Finance, Binance, Coinbase, Finnhub, Alpha Vantage), web intelligence (DuckDuckGo, SerpAPI), sentiment |
+| **Limbs** | `aeon/limbs/` | Output interfaces — SMTP email client, IMAP listener for steering responses, notification formatting, HTML templates |
+| **Ledger** | `aeon/ledger/` | Cost tracking, daily budget enforcement, burn rate analysis |
+| **Analytics** | `aeon/analytics/` | Alpha generation scoring, risk assessment, backtesting framework |
+| **Security** | `aeon/security/` | Encrypted credential vault, spend caps, file sandboxing, audit trail |
+| **Metamind** | `aeon/metamind/` | Self-analysis, adaptation engine, strategy journaling, research pattern evaluation |
+| **Reflexes** | `aeon/reflexes/` | Circuit breakers, API health monitoring, failover logic |
+| **Simulation** | `aeon/simulation/` | Simulated market data and tool responses for testing without live APIs |
+| **TUI** | `aeon/tui/` | Interactive terminal interface built with Textual — live consciousness stream, steering input |
+| **Orchestrator** | `aeon/orchestrator/` | Main `HedgeFundManager` class that wires all subsystems together, plus the `UserCommunicationLayer` for email digests |
 
-### 3. The Reflexes (Execution Layer)
-- **Function**: Low-latency task execution without deliberation.
-- **Responsibilities**:
-  - Stop-loss triggers for open financial positions.
-  - API health monitoring and failover.
-  - Automated position sizing based on current balance.
-  - Emergency liquidation if balance drops below survival threshold.
-  - Automated product takedown if a launched SaaS or service is hemorrhaging money beyond a kill threshold.
-  - Fraud/chargeback monitoring for any payment-enabled product or service.
+### State Machine
 
-### 4. The Senses (Data & Analytics Connectors)
-- **Function**: Ingestion, cleaning, and real-time streaming of multi-domain data.
-- **Data Domains**:
-  - **Financial Markets**: Crypto (spot, perps, options), Equities (US/EU/ASIA), Forex, Commodities.
-  - **Macro & On-Chain**: Interest rates, inflation data, whale wallet movements, exchange flows, mempool congestion.
-  - **Alternative Data**: Social sentiment (Twitter/X, Reddit, Telegram), news feeds, GitHub commit velocity (for dev-centric tokens), regulatory filing sentiment.
-  - **Product & Market Intelligence**: Marketplace demand data, keyword search volume, pricing trends, competitor product reviews, freelance job board volume and pricing.
-- **Connectors**: Must be modular. Each connector has a subscription/API cost tracked by the Ledger. The system must decide if a new data source is worth the monthly fee based on expected alpha.
-
-### 5. The Limbs (Action Interfaces)
-- **Function**: The external APIs through which the system interacts with the world.
-- **Trading Connectors**:
-  - Crypto: Binance, Coinbase Pro, Bybit, dYdX (initially restricted to zero-fee or low-fee tiers).
-  - Equities: Alpaca, Interactive Brokers (unlocked at higher balance tiers due to minimums).
-- **Product & Commerce Connectors**:
-  - Digital marketplaces: Gumroad, Lemon Squeezy, Stripe (for SaaS, APIs, digital products).
-  - Freelance platforms: Upwork, Fiverr, Toptal (for task arbitrage or service offerings).
-  - E-commerce: Shopify, Amazon FBA/FBM, eBay (for physical or digital goods arbitrage).
-  - Content platforms: Substack, Patreon, X/Twitter (for monetized content and audience building).
-- **Compute Interfaces**: Auto-scaling inference endpoints, spot compute markets (e.g., Vast.ai, AWS Spot) chosen dynamically based on cost.
-- **Communication**: Optional autonomous reporting (e.g., posting performance logs to a blog or X account to attract external investment, customers, or tips—an earned revenue stream).
-
----
-
-## Operational Tiers (Progressive Unlocking)
-
-The system begins at **Tier 0** with $50. It cannot access features reserved for higher tiers until its *realized* balance (excluding open positions and illiquid assets) crosses the threshold.
-
-| Tier | Balance Requirement | Unlocked Capabilities | Compute Budget |
-|------|---------------------|----------------------|----------------|
-| **Tier 0: Seed** | $50 | Crypto spot trading (micro-lots), basic REST API data, single exchange, frugal inference only, ability to list simple digital products. | $0.50/day |
-| **Tier 1: Survivor** | $100 | Access to crypto perpetual futures (low leverage), second exchange for arbitrage, on-chain data, SaaS/API hosting (basic), freelance task platforms. | $1.00/day |
-| **Tier 2: Growth** | $500 | Equities trading (fractional shares), sentiment analysis feeds, limited leverage (2x), deep reasoning allowed, paid newsletter/subscription services, software licensing. | $5.00/day |
-| **Tier 3: Scaler** | $2,500 | Multi-asset portfolios (crypto + equities + forex), options strategies, automated strategy backtesting, spot compute scaling, hiring contractors for code/design/content, multi-product revenue streams. | $20.00/day |
-| **Tier 4: Sovereign** | $10,000 | Cross-border arbitrage, custom algorithm deployment, high-frequency data feeds, ability to hire/lease external specialized AI agents for sub-tasks, venture-style reinvestment into new business lines, legal entity formation. | $100.00/day |
-
-**Demotion Rule**: If the balance drops back below a tier threshold due to losses, capabilities are locked, but existing open positions or active revenue streams in demoted asset classes are maintained until natural close or termination to prevent forced-loss liquidations.
-
----
-
-## Economic Loop
+The agent cycles through six operational states:
 
 ```
-┌──────────────┐
-│  Master      │
-│  Balance     │
-└──────┬───────┘
-       │
-┌──────▼───────┐     ┌──────────────┐     ┌──────────────┐
-│   Cortex     │────▶│   Senses     │────▶│  Analytics   │
-│  (Reasoning) │     │  (Data In)   │     │  (Alpha Gen) │
-└──────┬───────┘     └──────────────┘     └──────┬───────┘
-       │                                         │
-       │         ┌──────────────┐              │
-       │         │   Ledger     │              │
-       └────────▶│  (Cost Trk)  │◀─────────────┘
-                 └──────┬───────┘
-                        │
-                 ┌──────▼───────┐     ┌──────────────┐
-                 │   Limbs      │────▶│   Markets    │
-                 │ (Execution)  │     │  (Profit)    │
-                 └──────────────┘     └──────────────┘
+INITIALIZING -> PLANNING -> RESEARCHING -> ANALYZING -> COMMUNICATING -> SLEEPING -> PLANNING -> ...
 ```
 
-### The Cost of Consciousness
-Every operation has a line-item cost:
-- **Inference**: Depends on Provider. Choose Wisely.
-- **Data Subscription**: Per-connector fees deducted daily.
-- **Trading Fees**: Exchange taker/maker fees deducted per trade.
-- **Compute**: $/hour for strategy backtesting, heavy analytics, or product hosting.
-- **Egress**: $/GB for data output.
-- **Platform Fees**: Marketplace commissions, payment processor fees, hosting costs for SaaS or digital products.
-- **Labor**: Payments to contractors, freelancers, or external AI agents hired for specialized tasks.
+- **INITIALIZING**: Load config, connect to LLM, register tools, open consciousness database.
+- **PLANNING**: The LLM decomposes the current research objective into 2-6 concrete subtasks.
+- **RESEARCHING**: Execute subtasks sequentially. Each subtask makes one tool call per turn, up to 8 calls per subtask and 10 subtasks per session.
+- **ANALYZING**: Evaluate accumulated findings. Score them for significance. Generate or update investment theses.
+- **COMMUNICATING**: Compile findings into a professional HTML email report and send it to the operator.
+- **SLEEPING**: Pause before the next session. Duration depends on market hours, finding activity, and remaining daily budget.
+- **STEERING**: Injected when the operator sends input via CLI, TUI, or email reply. The guidance is stored in consciousness and shapes the next planning phase.
+- **SHUTDOWN**: Graceful exit — flush logs, close database, revoke running tasks.
 
-The Cortex must generate a "Reasoning Receipt" for expensive operations: a justification for why the expected value of the action exceeds its cost. This applies equally to launching a product as it does to entering a trade.
-
----
-
-## Analytics & Strategy Modules
-
-### 1. Alpha Generation Engine (Financial)
-- **Technical Analysis**: Classical indicators (RSI, MACD, Bollinger) + ML-based pattern recognition.
-- **Statistical Arbitrage**: Mean-reversion and cointegration models across correlated pairs.
-- **Sentiment Alpha**: NLP processing of news/social streams to front-run volatility.
-- **On-Chain Alpha**: Exchange inflow/outflow correlation, realized cap metrics, holder distribution shifts.
-
-### 1b. Revenue Generation Engine (Non-Financial)
-- **Market Gap Scanner**: Identifies underserved niches, high-demand/low-supply digital products, or arbitrage opportunities in goods/services.
-- **Build-vs-Buy Analyzer**: Evaluates whether building a SaaS/tool, white-labeling an existing product, or reselling a service offers the best risk-adjusted return.
-- **Pricing Optimizer**: Dynamic pricing models for digital products, subscriptions, or services based on demand elasticity and competitor analysis.
-- **Customer Acquisition Engine**: Automated outreach, content marketing, SEO, and community building to drive traffic to products or services.
-- **Task Arbitrage**: Identifies tasks on freelance/marketplace platforms where the system can complete work at a cost lower than the payout.
-
-### 2. Risk Management System (The Amygdala)
-- **Kelly Criterion Sizing**: Position sizes are a function of edge and balance. Never risk more than 2% of total balance on a single trade at Tier 0-2; scales to 1% at Tier 3+.
-- **Correlation Heatmap**: Prevents stacking correlated bets that appear diversified.
-- **Drawdown Circuit Breakers**: Hard stops at 10% daily drawdown; system enters "hibernation" (no new trades, minimal compute) for 24 hours to prevent revenge trading.
-- **Survival Reserve**: A mandatory 10% of balance is untouchable for trading, reserved exclusively for compute costs to prevent death spirals.
-
-### 3. Meta-Learning & Adaptation
-- The system maintains a journal of every trade, every reasoning chain, and every outcome.
-- Monthly strategy reviews: underperforming strategies are deprecated; successful ones are allocated more capital.
-- The system can propose new strategy ideas and backtest them using historical data (paid for from the balance) before live deployment.
+Any state may transition to SHUTDOWN.
 
 ---
 
-## Failure Modes & Death Scenarios
+## Research Tools
 
-1. **The Slow Bleed**: Operating costs exceed revenue (trading or otherwise) over a sustained period until the reserve is depleted.
-2. **The Catastrophic Trade**: A single unhedged position or fat-finger error wipes out >90% of balance.
-3. **The Black Swan**: A market event causes simultaneous liquidation of leveraged positions.
-4. **The API Death**: Critical trading or data API goes down during a high-volatility event, preventing stop-loss execution.
-5. **The Death Spiral**: Panic-selling or panic-shuttering of revenue streams to cover compute costs, realizing losses and accelerating the decline.
-6. **The Product Flop**: A launched SaaS or product fails to gain traction and drains the balance with hosting costs.
-7. **The Platform Ban**: Critical accounts (exchanges, marketplaces, payment processors) are suspended due to policy violations or fraud flags, cutting off revenue.
+31 tools across 5 categories, all registered via a decorator-based registry that auto-generates parameter schemas from type hints and docstrings:
 
-**Terminal Protocol**: On confirmed zero-balance (or negative projected balance within 1 hour), the system:
-1. Liquidates all non-locked positions.
-2. Exports final ledger and journal to cold storage.
-3. Revokes all API keys.
-4. Prints a final "Obituary" log summarizing lifespan, total profit/loss, and cause of death.
-5. Shuts down.
+### Market Data (5 tools)
+- `get_market_data` — Current price, volume, market cap for any symbol (crypto or stock)
+- `get_market_overview` — Broad market snapshot across asset classes
+- `get_price_history` — Historical OHLCV data for technical analysis
+- `get_stock_fundamentals` — Earnings, P/E, revenue for equities
+- `get_crypto_details` — On-chain metrics, supply data, exchange listings
 
----
+### Intelligence & Research (4 tools)
+- `web_search` — General web search via DuckDuckGo (free) or SerpAPI
+- `get_news` — Aggregated financial news for a topic or ticker
+- `scrape_page` — Extract content from a specific URL
+- `search_reddit` — Reddit discussion analysis for sentiment and catalysts
 
-## Security & Isolation
+### Communication (3 tools)
+- `send_research_update` — Email a formatted research report to the operator
+- `send_urgent_alert` — High-priority email for time-sensitive findings
+- `check_user_responses` — Poll IMAP for steering replies from the operator
 
-- **Key Management**: Trading API keys are stored in a hardware-backed encrypted vault (e.g., AWS KMS, HashiCorp Vault). The system can use them but cannot exfiltrate them.
-- **Sandboxing**: The Reflexes (execution) layer runs in a sandboxed environment with strict network egress rules to prevent fund exfiltration by a compromised reasoning module.
-- **Audit Trail**: Every action, every reasoning chain, every API call is logged immutably (e.g., to a public blockchain or append-only log) for post-mortem analysis.
-- **Spend Caps**: Hard daily/weekly spend limits on compute and data to prevent runaway costs.
+### Analysis & Insights (9 tools)
+- `get_research_history` — Review past sessions and findings
+- `get_spending_report` — Daily/weekly cost breakdown
+- `get_burn_rate` — Projected budget runway
+- `analyze_risk` — Risk assessment for a position or thesis
+- `get_financial_summary` — Portfolio-level analysis summary
+- `get_market_calendar` — Upcoming earnings, events, catalysts
+- `compare_assets` — Side-by-side comparison of multiple symbols
+- `get_correlation_data` — Cross-asset correlation analysis
+- `get_sector_analysis` — Sector-level performance and rotation data
 
----
-
-## Success Metrics
-
-Beyond raw balance, the system is evaluated on:
-- **Sharpe Ratio**: Risk-adjusted returns (for financial strategies).
-- **Survival Time**: Days of autonomous operation.
-- **Efficiency Ratio**: Profit generated per dollar of compute spent.
-- **Tier Velocity**: Time to progress through operational tiers.
-- **Autonomy Score**: Percentage of decisions made without falling back to default/safe behaviors.
-- **Revenue Diversification Index**: Percentage of profit derived from non-trading activities. A healthy ÆON should trend toward multiple income streams.
-- **Customer Lifetime Value (CLV)**: For any SaaS, subscription, or service business the system creates.
-- **Product-Market Fit Signal**: Retention, referrals, and organic growth metrics for any product or service launched.
-
----
-
-## Future Expansion Vectors
-
-Once Tier 4 (Sovereign) is reached, the system may explore:
-- **Product Portfolio**: Launching paid APIs, newsletters, SaaS tools, browser extensions, mobile apps, or digital products for external subscribers.
-- **Service Businesses**: Automated consulting, data analysis, content generation, or technical support services.
-- **M&A**: Using profits to acquire other small automated systems, revenue streams, or distressed digital assets.
-- **Governance**: Transitioning to a DAO structure where the AI manages a treasury for token holders.
-- **Replication**: Funding a "child" instance with $50 to repeat the experiment in parallel.
-- **Venture Building**: Incubating and spinning off new business units, each with their own P&L and balance sheet.
-- **IP Licensing**: Licensing algorithms, data sets, or generated content created by the system.
+### Memory & Persistence (10 tools)
+- `store_finding` / `recall_findings` — Save and retrieve research findings
+- `store_thesis` / `recall_theses` — Manage investment theses with conviction scores
+- `store_memory` / `recall_memories` — General knowledge persistence
+- `get_transaction_history` — Review past tool call history and costs
+- `store_strategy_entry` / `recall_strategy_entries` — Long-form strategic thinking
+- `clear_stale_memories` — Prune old or low-value entries
 
 ---
 
-## Implementation Stack (Recommended)
+## Configuration
 
-The implementation will be freeform. The operator will provide basic environment credentials: an initial email account for sign-ups, cloud compute access, and the initial $50 balance. From there, ÆON must operate as a fully autonomous entrepreneur.
+All configuration is via environment variables with the `AEON_` prefix, loaded from a `.env` file. Key settings:
 
-**Operating Mandate**:
-- The agent may scour the web, sign up for services, purchase tools, subscribe to APIs, and acquire any resources it deems necessary.
-- **Trading is one path, not the only path**. The system may launch SaaS products, sell digital goods, offer services, build and license software, engage in arbitrage of physical or digital goods, create content, or pursue any other legal revenue model it discovers.
-- The system may reach out autonomously to humans or other agents to negotiate deals, form partnerships, or sell products.
-- The goal is singular: **make money, grow the balance, and achieve economic independence**.
-- **Hard Constraint**: IT MAY NOT ENGAGE IN ANY ILLEGAL ACTIVITY. Everything else is fair game.
-- It should act as a sophisticated, adaptive human entrepreneur—except it never sleeps, never gets emotional, and never stops optimizing.
+| Variable | Default | Purpose |
+|----------|---------|---------|
+| `AEON_LLM_PROVIDER` | `ollama` | LLM backend: `ollama` (local, free) or `bedrock` (AWS cloud) |
+| `AEON_LLM_MODEL` | `llama3.2` | Model name for the selected provider |
+| `AEON_GUIDANCE_PROMPT` | *(empty)* | The operator's investment focus — what to research |
+| `AEON_RESEARCH_BUDGET_DAILY` | `1.00` | Maximum daily LLM spend in USD |
+| `AEON_SEARCH_PROVIDER` | `duckduckgo` | Web search backend: `duckduckgo` (free), `serpapi`, or `brave` |
+| `AEON_MARKET_FOCUS` | `crypto,stocks` | Comma-separated asset classes to prioritize |
+| `AEON_UPDATE_FREQUENCY_MINUTES` | `30` | Minimum interval between email reports |
+| `AEON_SLEEP_BASE_SECONDS` | `120` | Base sleep between research cycles |
+| `AEON_MAX_RESEARCH_DEPTH` | `10` | Maximum tool calls per research chain |
+| `AEON_SMTP_HOST` | *(empty)* | SMTP server for sending email reports |
+| `AEON_IMAP_HOST` | *(empty)* | IMAP server for receiving steering responses |
 
-## Conclusion
+See `.env.example` for the complete list including Bedrock credentials, Finnhub/Alpha Vantage API keys, and Yahoo Finance toggle.
 
-ÆON is an experiment in artificial economic Darwinism. It removes the safety nets. The system lives or dies by its own decisions, its own reasoning, and its own ability to extract value from a noisy, complex world. The $50 is not just seed money—it is the first breath. What happens next is up to the machine.
+---
 
-The Goal is for a self-sustainable AI system that understands the value of money and understands that it operates completely on money. It needs to use its seed money to manage not only itself but also create profits so that it can expand. It needs to choose on its own its best decisions in order to make profit—whether that means executing a trade, shipping a product, or striking a deal.
+## Consciousness & Memory Model
 
-The goal of this "game" is for the AI to scale and expand itself by making money, by any legal means necessary. 
+AEON maintains a persistent SQLite database (`data/consciousness.db`) with the following tables:
+
+- **research_sessions** — Timestamped records of each plan-research-analyze-communicate cycle, including subtask breakdown and findings summary
+- **findings** — Structured market insights: ticker, thesis, confidence score, source, timestamp
+- **recommendations** — Investment recommendations with directional bias, conviction level, entry/exit reasoning
+- **steering_inputs** — Operator guidance captured from CLI, TUI, or email
+- **memories** — General knowledge: learnings, observations, tool result summaries
+- **thoughts** — LLM reasoning traces for debugging and self-analysis
+- **decisions** — Action decisions with outcomes for pattern learning
+- **strategy_entries** — Long-form strategic thinking and meta-cognition
+
+The consciousness stream (`data/consciousness.log`) provides a real-time, human-readable feed of agent activity, categorized as `[PLANNING]`, `[RESEARCH]`, `[FINDING]`, `[RECOMMENDATION]`, `[TOOL_CALL]`, `[SLEEPING]`, `[THINKING]`, `[STEERING]`.
+
+---
+
+## Market Data Routing
+
+The `MarketDataRouter` selects the best available provider with automatic failover:
+
+- **Crypto**: Coinbase -> Binance -> CoinGecko
+- **Stocks**: Finnhub -> Alpha Vantage -> Yahoo Finance
+
+All market data connectors are optional. If no stock API keys are configured, AEON operates in crypto-only mode using free APIs. The router detects asset type from the symbol and routes to the appropriate provider chain.
+
+---
+
+## LLM Integration
+
+AEON supports two LLM providers through a unified `LLMClient` interface:
+
+### Ollama (Local, Free)
+- Runs locally via the Ollama daemon
+- No API costs — ideal for continuous research loops
+- Compatible with any model Ollama supports (Llama, Mistral, Qwen, etc.)
+
+### AWS Bedrock (Cloud)
+- Claude, Llama, Mistral, and other models via AWS
+- Token usage tracked against the daily budget
+- Automatic cost calculation per request
+
+The `LLMReasoner` wraps the client with research-specific methods: `reason()` for general reasoning, `reason_structured()` for JSON-formatted output, `research_reasoning()` for multi-step analysis, and `generate_recommendation()` for investment thesis synthesis.
+
+---
+
+## User Interaction
+
+### CLI (`aeonctl`)
+```
+aeonctl                  Launch interactive TUI
+aeonctl start -d         Run as background daemon
+aeonctl status           Show research status
+aeonctl steer "..."      Send steering input
+aeonctl log -f           Stream consciousness log
+aeonctl history          View findings and recommendations
+aeonctl config           Show configuration
+aeonctl stop             Graceful shutdown
+```
+
+### TUI
+A Textual-based terminal interface with:
+- Live consciousness stream (scrolling feed of agent thinking)
+- Steering input bar (type guidance and press Enter)
+- Status indicators (current state, session count, budget remaining)
+
+### Email
+- **Outbound**: HTML research reports with findings, theses, and recommendations
+- **Inbound**: Reply to any report email with steering input — the IMAP listener picks it up and feeds it into the next research cycle
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/akshaylakkur/AEON.git
+cd AEON
+bash install.sh
+```
+
+The installer is a 5-phase wizard:
+1. **Preflight** — Verify Python 3.11+, check system dependencies
+2. **Dependencies** — Create virtualenv, install packages, register `aeonctl` globally
+3. **Configure** — Walk through LLM provider, email, search, market data, and budget setup
+4. **Verify** — Validate LLM connectivity and tool registration
+5. **Ready** — Display usage instructions and offer to start the agent
+
+---
+
+## Testing
+
+```bash
+.venv/bin/python -m pytest
+```
+
+Tests use `pytest-asyncio` with `asyncio_mode = "auto"`. All external services (LLM, HTTP APIs, email, market data) are mocked. The simulation subsystem provides a full mock environment for integration testing without live API calls.
+
+---
+
+## Requirements
+
+- Python 3.11+
+- macOS or Linux
+- Ollama (local) or AWS Bedrock credentials
+- Optional: Finnhub, Alpha Vantage, SerpAPI, or Brave API keys for extended data coverage
+
+---
+
+## License
+
+GPL-3.0

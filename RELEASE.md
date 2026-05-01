@@ -430,7 +430,6 @@ Contributions are welcome! Areas for improvement:
 
 ## 🔗 Documentation
 
-- **[CLAUDE.md](./CLAUDE.md)** — Detailed architecture, command reference, testing guide
 - **[SPECIFICATION.md](./SPECIFICATION.md)** — Original vision and tier system
 - **Consciousness Log** — View real-time agent thinking via `./aeonctl log -f`
 
@@ -455,5 +454,3 @@ Open an issue for bugs, feature requests, or questions. For real-time updates, f
 ```
 
 ---
-
-**Built with ❤️ by the ÆON team. This is not financial advice. Always do your own research.**
