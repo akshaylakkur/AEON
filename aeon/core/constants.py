@@ -74,10 +74,10 @@ DEFAULT_SMTP_USE_TLS: Final[bool] = True
 # ---------------------------------------------------------------------------
 
 APP_NAME: Final[str] = "AEON Hedge Fund Manager"
-APP_VERSION: Final[str] = "2.0.0"
+APP_VERSION: Final[str] = "1.0.0"
 
 # ---------------------------------------------------------------------------
-# Legacy constants removed (v2.0.0)
+# Legacy constants removed (v1.0.0)
 # ---------------------------------------------------------------------------
 # The following trading-era constants were removed because AEON is now a
 # research-only hedge fund manager that recommends investments but does not

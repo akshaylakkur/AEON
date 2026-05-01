@@ -65,7 +65,7 @@ class AeonHeader(Static):
         session_label = f"Session: {self.session_count}" if self.session_count > 0 else "Session: --"
 
         self.update(
-            f"[bold #e6edf3]AEON v2.0.0[/] [dim #8b949e]--[/] "
+            f"[bold #e6edf3]AEON v1.0.0[/] [dim #8b949e]--[/] "
             f"[#8b949e]AI Hedge Fund Research Manager[/]"
             f"    [{color}]{self.state_text}[/]"
             f"  [dim #8b949e]|[/]  [#8b949e]{session_label}[/]"

@@ -203,7 +203,7 @@ class HedgeFundManager:
         )
 
         logger.info("=" * 64)
-        logger.info("  AEON Hedge Fund Manager v2.0.0")
+        logger.info("  AEON Hedge Fund Manager v1.0.0")
         logger.info("  LLM: %s", self._llm_provider.name if hasattr(self._llm_provider, "name") else "unknown")
         logger.info("  Email: %s", "configured" if (self._email_client and self._email_client.is_configured) else "not configured")
         logger.info("  IMAP: %s", "configured" if (self._imap_listener and self._imap_listener.is_configured) else "not configured")

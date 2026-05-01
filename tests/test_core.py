@@ -55,7 +55,7 @@ class TestConstants:
 
     def test_app_metadata(self) -> None:
         assert APP_NAME == "AEON Hedge Fund Manager"
-        assert APP_VERSION == "2.0.0"
+        assert APP_VERSION == "1.0.0"
 
 
 # ---------------------------------------------------------------------------

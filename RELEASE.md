@@ -1,4 +1,4 @@
-# Project ÆON v2.0.0 — Autonomous Economic Operating Node
+# Project ÆON v1.0.0 — Autonomous Economic Operating Node
 
 **A self-sustaining AI research agent that continuously investigates investment opportunities, forms evidence-based theses, and communicates insights autonomously.**
 
@@ -19,7 +19,7 @@ The system is architected around a core principle: **cost-aware autonomy**. Ever
 
 ---
 
-## ✨ What's New in v2.0.0
+## ✨ What's New in v1.0.0
 
 ### Major Features
 - **Task-Driven Research Sessions**: LLM decomposes user guidance into 2–6 concrete research subtasks, executes each sequentially with one tool call per turn
@@ -111,7 +111,7 @@ The system is architected around a core principle: **cost-aware autonomy**. Ever
 - **OS**: macOS, Linux, Windows (with WSL)
 - **Dependencies** (see `requirements.txt`):
   - `httpx>=0.27.0` — Async HTTP client
-  - `cryptography>=42.0.0` — Security
+  - `cryptography>=41.0.0` — Security
   - `numpy>=1.26.0`, `pandas>=2.2.0` — Data processing
   - `pytest>=8.0.0`, `pytest-asyncio>=0.23.0` — Testing
   - `playwright>=1.40.0` — Web automation
