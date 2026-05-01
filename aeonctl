@@ -1,0 +1,68 @@
+#!/usr/bin/env bash
+# =============================================================================
+# aeonctl -- CLI for AEON AI Hedge Fund Research Manager
+# =============================================================================
+# Usage:
+#   aeonctl                 Launch interactive TUI (default)
+#   aeonctl status          Show current research status
+#   aeonctl start           Start in interactive mode (foreground TUI)
+#   aeonctl start -d        Start as background daemon
+#   aeonctl steer "msg"     Send steering input to the agent
+#   aeonctl log             Show consciousness stream (agent's thinking)
+#   aeonctl log -f          Follow the stream in real time
+#   aeonctl history         Show recent recommendations and findings
+#   aeonctl config          Show current configuration
+#   aeonctl stop            Stop the running agent
+# =============================================================================
+#
+# If installed as a pip package (`pip install -e .`), the `aeonctl` entry point
+# handles everything directly. This script is a fallback for non-pip
+# installations or when running from the project directory.
+# =============================================================================
+set -euo pipefail
+
+# ---------------------------------------------------------------------------
+# 1) If the aeon.cli module is importable (pip-installed), use it directly.
+# ---------------------------------------------------------------------------
+if python3 -c "import aeon.cli" 2>/dev/null; then
+    exec python3 -m aeon.cli "$@"
+fi
+
+# ---------------------------------------------------------------------------
+# 2) Locate the project root from AEON_HOME or the script's own directory.
+# ---------------------------------------------------------------------------
+SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" 2>/dev/null && pwd || true)"
+
+if [[ -n "${AEON_HOME:-}" ]] && [[ -f "$AEON_HOME/aeon/app.py" ]]; then
+    # Explicit AEON_HOME takes priority
+    :
+elif [[ -n "${SCRIPT_DIR:-}" ]] && [[ -f "$SCRIPT_DIR/aeon/app.py" ]]; then
+    AEON_HOME="$SCRIPT_DIR"
+else
+    echo "Error: Cannot locate AEON project directory." >&2
+    echo "Set the AEON_HOME environment variable or run from the project root." >&2
+    exit 1
+fi
+
+# ---------------------------------------------------------------------------
+# 3) Find Python -- prefer venv, fall back to system.
+# ---------------------------------------------------------------------------
+if [[ -x "$AEON_HOME/.venv/bin/python" ]]; then
+    PYTHON="$AEON_HOME/.venv/bin/python"
+elif command -v python3 &>/dev/null; then
+    PYTHON="python3"
+elif command -v python &>/dev/null; then
+    PYTHON="python"
+else
+    echo "Error: Python not found. Install Python 3.11+ first." >&2
+    exit 1
+fi
+
+# Note: .env is loaded by python-dotenv inside the Python process.
+# We do not source it here to avoid shell-level parsing issues.
+
+# ---------------------------------------------------------------------------
+# 4) Run the Python CLI module with all arguments.
+# ---------------------------------------------------------------------------
+cd "$AEON_HOME"
+exec "$PYTHON" -m aeon.cli "$@"

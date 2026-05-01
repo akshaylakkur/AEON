@@ -1,0 +1,18 @@
+[project]
+name = "aeon"
+version = "2.0.0"
+description = "AEON - AI Hedge Fund Research Manager"
+requires-python = ">=3.11"
+
+[project.scripts]
+aeonctl = "aeon.cli:main"
+
+[build-system]
+requires = ["setuptools>=68.0"]
+build-backend = "setuptools.build_meta"
+
+[tool.setuptools.packages.find]
+include = ["aeon*"]
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
