@@ -29,7 +29,7 @@ The system runs locally or in a container. It connects to an LLM (Ollama for fre
 | **Core** | `aeon/core/` | Event bus, state machine, configuration, consciousness database, neural orchestrator, consciousness stream |
 | **Cortex** | `aeon/cortex/` | LLM providers (Ollama, Bedrock), unified LLM client, reasoning engine, tool registry, planner, executor |
 | **Tools** | `aeon/tools/` | 31 research tools registered via `@register_tool` decorator, organized by category |
-| **Senses** | `aeon/senses/` | Data connectors — market data (CoinGecko, Yahoo Finance, Binance, Coinbase, Finnhub, Alpha Vantage), web intelligence (DuckDuckGo, SerpAPI), sentiment |
+| **Senses** | `aeon/senses/` | Data connectors — market data (CoinGecko, Yahoo Finance, Binance, Coinbase, Finnhub, Alpha Vantage), web intelligence (DuckDuckGo, SerpAPI, Brave), sentiment |
 | **Limbs** | `aeon/limbs/` | Output interfaces — SMTP email client, IMAP listener for steering responses, notification formatting, HTML templates |
 | **Ledger** | `aeon/ledger/` | Cost tracking, daily budget enforcement, burn rate analysis |
 | **Analytics** | `aeon/analytics/` | Alpha generation scoring, risk assessment, backtesting framework |
@@ -73,7 +73,7 @@ Any state may transition to SHUTDOWN.
 - `get_crypto_details` — On-chain metrics, supply data, exchange listings
 
 ### Intelligence & Research (4 tools)
-- `web_search` — General web search via DuckDuckGo (free) or SerpAPI
+- `web_search` — General web search via DuckDuckGo, SerpAPI, or Brave
 - `get_news` — Aggregated financial news for a topic or ticker
 - `scrape_page` — Extract content from a specific URL
 - `search_reddit` — Reddit discussion analysis for sentiment and catalysts
