@@ -127,8 +127,8 @@ The system is architected around a core principle: **cost-aware autonomy**. Ever
 
 1. **Clone the repository**:
    ```bash
-   git clone https://github.com/yourusername/AUTOTRADE.git
-   cd AUTOTRADE
+   git clone https://github.com/akshaylakkur/AEON.git
+   cd AEON
    ```
 
 2. **Run the installer**:
@@ -267,7 +267,7 @@ Gracefully terminates the research loop and logs final session state.
 ## 📊 Project Structure
 
 ```
-AUTOTRADE/
+AEON/
 ├── aeonctl                    # CLI launcher (bash)
 ├── install.sh                 # 5-phase installation wizard
 ├── pyproject.toml             # Pytest config
@@ -275,7 +275,7 @@ AUTOTRADE/
 ├── .env.example               # Template for configuration
 │
 ├── aeon/                     # Main package
-│   ├── aeon.py                # AEON entry point wrapper
+│   ├── app.py                 # AEON entry point wrapper
 │   ├── cli.py                 # CLI implementation (start, status, steer, log, history, config, stop)
 │   ├── core/                  # Core logic
 │   │   ├── config.py          # HedgeFundConfig
@@ -312,10 +312,10 @@ AUTOTRADE/
 │   ├── metamind/              # Self-analysis, adaptation
 │   └── reflexes/              # Circuit breakers, health monitoring
 │
-├── expantron/                 # Orchestration layer
-│   ├── hinged.py              # HedgeFundManager (main orchestrator)
-│   ├── config.py              # Expantron config
-│   └── membrane.py            # User communication layer
+│   └── orchestrator/          # Orchestration layer
+│       ├── manager.py         # HedgeFundManager (main orchestrator)
+│       ├── config.py          # Orchestrator config
+│       └── membrane.py        # User communication layer
 │
 ├── tests/                     # 976 comprehensive tests
 │   ├── test_aeon.py
@@ -349,7 +349,7 @@ The project includes **976 comprehensive tests** covering all subsystems:
 .venv/bin/python -m pytest tests/test_neural_orchestrator.py::test_research_session
 
 # Run with coverage
-.venv/bin/python -m pytest --cov=auton tests/
+.venv/bin/python -m pytest --cov=aeon tests/
 
 # Run async tests in parallel
 .venv/bin/python -m pytest -n auto
@@ -438,11 +438,11 @@ Contributions are welcome! Areas for improvement:
 
 ## 🎯 Roadmap
 
-- **v2.1**: Multi-user steering via web dashboard
-- **v2.2**: Options strategy analysis and execution
-- **v2.3**: On-chain data integration (whale tracking, MEV analysis)
-- **v2.4**: Autonomous product/SaaS launches for revenue diversification
-- **v3.0**: Cross-border arbitrage and fx trading
+- **v1.1**: Multi-user steering via web dashboard
+- **v1.2**: Options strategy analysis and execution
+- **v1.3**: On-chain data integration (whale tracking, MEV analysis)
+- **v1.4**: Autonomous product/SaaS launches for revenue diversification
+- **v2.0**: Cross-border arbitrage and fx trading
 
 ---
 

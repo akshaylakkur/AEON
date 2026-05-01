@@ -2,6 +2,9 @@
 
 **An AI hedge fund research manager that continuously investigates investment opportunities, forms evidence-based theses, and communicates insights autonomously via email.**
 
+
+![alt text](image.png)
+
 ---
 
 ## Overview
@@ -28,7 +31,7 @@ The system is built around **cost-aware autonomy**. Every LLM token and API call
 ### Installation
 
 ```bash
-git clone https://github.com/yourusername/AEON.git
+git clone https://github.com/akshaylakkur/AEON.git
 cd AEON
 bash install.sh
 ```
